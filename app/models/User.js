@@ -4,6 +4,7 @@ module.exports = model('User', new Schema({
     username: {
         type: String,
         require: true,
+        unique: [true, "This Username Already Exist"],
     },
     email: {
         type: String,
@@ -11,10 +12,6 @@ module.exports = model('User', new Schema({
         unique: [true, "This Email Already Exist"],
     },
     password: {
-        type: String,
-        require: true,
-    },
-    role: {
         type: String,
         require: true,
     }

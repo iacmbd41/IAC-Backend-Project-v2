@@ -4,10 +4,12 @@ const jwt = require("jsonwebtoken")
 
 exports.signUp = async (req, res) => {
     try {
-        res.status(200).json(await User.create({
+        console.log(req.body)
+        await User.create({
             ...req.body,
             password: bcrypt.hashSync(req.body.password)
-        }))
+        })
+        res.status(200).json({ message: 'Registration Successfully Completed' })
     } catch (err) {
         console.debug(err.message, err)
         res.status(500).send({ message: 'Something went wrong!' })
@@ -16,9 +18,10 @@ exports.signUp = async (req, res) => {
 
 exports.signIn = async (req, res) => {
     try {
+        console.log(req.body)
         const user = await User.findOne({ username: req.body.username })
         if (!user) {
-            return res.status(401).send({ message: 'Invalid Your Username' })
+            return res.status(401).send({ message: 'Invalid Username' })
         }
 
         const isPasswordValid = bcrypt.compareSync(
@@ -27,13 +30,13 @@ exports.signIn = async (req, res) => {
         )
 
         if (!isPasswordValid) {
-            return res.status(401).send({ message: 'Invalid Your Password' })
+            return res.status(401).send({ message: 'Invalid Password' })
         }
 
         const token = jwt.sign(
             { 
                 id: user.id,
-                role: user.role,
+                email: user.email
             },
             process.env.SECRET,
             {
@@ -44,13 +47,15 @@ exports.signIn = async (req, res) => {
         )
 
         req.session.token = token
+        req.session.email = user.email
         console.debug('session:', req.session)
 
         return res.status(200).send({
             id: user.id,
             username: user.username,
             email: user.email,
-            role: user.role,
+            //role: user.role,
+            message: 'Login Successfully'
         })
     } catch (err) {
         console.debug(err.message, err)
@@ -63,7 +68,7 @@ exports.signOut = (req, res) => {
         // req.session.destroy
         req.session = null
         console.log('session:', req.session)
-        return res.status(200).send({ message: 'Signed out successfully.' })
+        return res.status(200).send({ message: 'Login out Successfully' })
     } catch (err) {
         console.debug(err.message, err);
         res.status(500).send({ message: 'Something went wrong!' })

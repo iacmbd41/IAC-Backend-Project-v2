@@ -1,9 +1,9 @@
-const Task = require('../models/ProductCategory')
+const ProductCate = require('../models/ProductCategory')
 const mongoose = require('mongoose')
 
 exports.get = async (req, res) => {
     try {
-        res.status(200).json(await Task.find());
+        res.status(200).json(await ProductCate.find());
     } catch (err) {
         console.debug(err.message, err)
         res.status(500).send({ message: 'Something went wrong!' })
@@ -12,11 +12,11 @@ exports.get = async (req, res) => {
 
 exports.getById = async (req, res) => {
     try {
-        const task = await Task.findById(req.params.id)
-        if(!task) {
+        const ProductCate = await ProductCate.findById(req.params.id)
+        if(!ProductCate) {
             return res.status(404).json({ message: 'Invalid product id' })
         }
-        res.status(200).json(task)
+        res.status(200).json(ProductCate)
     } catch(err) {
         console.debug(err.message, err)
         res.status(500).send({ message: 'Something went wrong!' })
@@ -25,8 +25,8 @@ exports.getById = async (req, res) => {
 
 exports.create = async (req, res) => {
     try {
-        await Task.create(req.body)
-        res.status(200).json(await Task.find());   
+        await ProductCate.create(req.body)
+        res.status(200).json(await ProductCate.find());   
     } catch(err) {
         console.debug(err.message, err)
         if (err instanceof mongoose.Error.ValidationError) {
@@ -38,10 +38,10 @@ exports.create = async (req, res) => {
 
 exports.update = async (req, res) => {
     try {
-        if(! await Task.findOneAndUpdate({_id: req.params.id}, req.body)) {
+        if(! await ProductCate.findOneAndUpdate({_id: req.params.id}, req.body)) {
             return res.status(404).json({ message: 'Invalid product id' })
         }
-        res.status(200).json(await Task.find())
+        res.status(200).json(await ProductCate.find())
     } catch(err) {
         console.debug(err.message, err)
         res.status(500).send({ message: 'Something went wrong!' })
@@ -50,10 +50,10 @@ exports.update = async (req, res) => {
 
 exports.delete = async (req, res) => {
     try {
-        if (! await Task.findOneAndDelete({_id: req.params.id})) {
+        if (! await ProductCate.findOneAndDelete({_id: req.params.id})) {
             return res.status(404).json({ message: 'Invalid product id' })
         }
-        res.status(422).json(await Task.find())
+        res.status(422).json(await ProductCate.find())
     } catch(err) {
         console.debug(err.message, err)
         res.status(500).send({ message: 'Something went wrong!' })

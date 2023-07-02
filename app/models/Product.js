@@ -20,5 +20,5 @@ module.exports = model('Product', new Schema({
 	desc: {
         type: String,
         required: false,
-    },
+    }
 }))
